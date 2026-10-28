@@ -1,0 +1,52 @@
+<section id="pull" data-transition="magic" style="background:#f3f5f8;color:#18202c;font-family:'Public Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center">
+<svg aria-label="Two vectors, cat and meows, 53 degrees apart, with curved arrows pulling them toward each other" width="792" height="792" viewBox="0 0 792 792" style="position:absolute;left:1000px;top:150px;width:792px;height:792px">
+<rect x="1" y="1" width="790" height="790" rx="24" fill="#fbfcfe" stroke="#dde2ea" stroke-width="2"/>
+<g stroke="#e6eaf0" stroke-width="2">
+<line x1="96" y1="72" x2="96" y2="720"/><line x1="246" y1="72" x2="246" y2="720"/><line x1="546" y1="72" x2="546" y2="720"/><line x1="696" y1="72" x2="696" y2="720"/>
+<line x1="72" y1="96" x2="720" y2="96"/><line x1="72" y1="246" x2="720" y2="246"/><line x1="72" y1="546" x2="720" y2="546"/><line x1="72" y1="696" x2="720" y2="696"/>
+</g>
+<g stroke="#5b6676" stroke-width="3">
+<line x1="52" y1="396" x2="740" y2="396"/>
+<line x1="396" y1="84" x2="396" y2="708"/>
+</g>
+<g fill="#5b6676">
+<polygon points="36,396 56,386 56,406"/>
+<polygon points="756,396 736,386 736,406"/>
+<polygon points="396,68 386,88 406,88"/>
+<polygon points="396,724 386,704 406,704"/>
+</g>
+<path d="M396 396 L500.4 361.3 A110 110 0 0 0 430.7 291.6 Z" fill="#2f5bd8" opacity="0.12"/>
+<line x1="396" y1="396" x2="477.8" y2="150.7" stroke="#6c7686" stroke-width="5" stroke-dasharray="14 10"/>
+<polygon points="486,126 489.2,154.5 466.4,146.9" fill="#fbfcfe" stroke="#6c7686" stroke-width="3" stroke-linejoin="round"/>
+<line x1="396" y1="396" x2="641.3" y2="314.2" stroke="#d9622b" stroke-width="7" stroke-linecap="round"/>
+<polygon points="666,306 645.1,325.6 637.5,302.8" fill="#d9622b"/>
+<g stroke="#2f5bd8" stroke-width="4" fill="none" stroke-linecap="round">
+<path d="M609.2 309.8 A230 230 0 0 0 584.4 264.0"/>
+<path d="M482.3 182.8 A230 230 0 0 1 528.0 207.6"/>
+</g>
+<g fill="#2f5bd8">
+<polygon points="572.9,247.6 592.6,258.3 576.2,269.7"/>
+<polygon points="544.4,219.1 522.3,215.8 533.7,199.4"/>
+</g>
+<circle cx="396" cy="396" r="8" fill="#18202c"/>
+</svg>
+<div style="width:800px;display:flex;flex-direction:column;gap:32px">
+<div style="display:flex;flex-direction:column;gap:20px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#2f5bd8">Training pair · [cat, meows]</p>
+<h2 style="font-family:'Bricolage Grotesque', Arial, sans-serif;font-size:64px;font-weight:700;line-height:1.1;color:#18202c">In the training set: pull them closer</h2>
+<p style="font-size:32px;line-height:1.4;color:#4a5566">Cat and meows appear together, so each training step turns the two vectors toward each other.</p>
+</div>
+<p style="font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:26px;color:#4a5566">cat = [+0.90, +0.30]   meows = [+0.30, +0.90]</p>
+<table style="width:800px;font-size:28px;color:#18202c">
+<tr><th style="width:44%;text-align:left"></th><th style="width:22%;text-align:right">Now</th><th style="width:34%;text-align:right">Goal</th></tr>
+<tr><td>Angle</td><td style="text-align:right">53°</td><td style="text-align:right">smaller</td></tr>
+<tr><td>Score = cat · meows</td><td style="text-align:right">0.54</td><td style="text-align:right">higher</td></tr>
+<tr><td>P = σ(score)</td><td style="text-align:right">63%</td><td style="text-align:right">toward 100%</td></tr>
+</table>
+</div>
+<p id="ax-d2" style="position:absolute;left:1276px;top:164px;width:240px;font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:center;color:#5b6676">dim 2</p>
+<p id="ax-d1" style="position:absolute;left:1564px;top:494px;width:200px;font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:right;color:#5b6676">dim 1</p>
+<p id="w-meows" style="position:absolute;left:1290px;top:236px;width:180px;font-size:36px;font-style:italic;line-height:1.2;text-align:right;color:#5b6676">meows</p>
+<p id="w-cat2" style="position:absolute;left:1686px;top:440px;width:106px;font-size:36px;font-weight:700;line-height:1.2;color:#b84d1c">cat</p>
+<aside>Here are just two vectors: the word vector for cat (solid) and the context vector for meows (dashed). They’re 53 degrees apart. The model’s score for the pair is their dot product, 0.54, and the sigmoid turns that into a probability of 63 percent. But [cat, meows] is in our training set, so we want that probability near 100 percent. Each training step nudges both vectors so they point more in the same direction, which raises the dot product.</aside>
+</section>

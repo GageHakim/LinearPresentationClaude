@@ -1,0 +1,51 @@
+<section id="math" style="display:flex; flex-direction:column; gap:32px; padding:128px; background:#f3f5f8">
+  <svg xmlns="http://www.w3.org/2000/svg" aria-label="cat and meows drawn from the origin, with the gradient drawn from the tip of cat pointing the same way as meows" viewBox="0 0 560 560" style="position:absolute; top:290px; left:1232px; width:560px; height:560px">
+<rect x="1" y="1" width="558" height="558" rx="24" fill="#fbfcfe" stroke="#dde2ea" stroke-width="2"/>
+<g stroke="#e6eaf0" stroke-width="2">
+<line x1="160" y1="40" x2="160" y2="490"/><line x1="250" y1="40" x2="250" y2="490"/><line x1="340" y1="40" x2="340" y2="490"/><line x1="430" y1="40" x2="430" y2="490"/>
+<line x1="70" y1="400" x2="530" y2="400"/><line x1="70" y1="310" x2="530" y2="310"/><line x1="70" y1="220" x2="530" y2="220"/><line x1="70" y1="130" x2="530" y2="130"/>
+</g>
+<g stroke="#5b6676" stroke-width="3">
+<line x1="70" y1="490" x2="530" y2="490"/>
+<line x1="70" y1="490" x2="70" y2="40"/>
+</g>
+<line x1="70" y1="490" x2="153.0" y2="240.9" stroke="#6c7686" stroke-width="5" stroke-dasharray="12 9"/>
+<polygon points="160,220 162.5,244.1 143.5,237.7" fill="#fbfcfe" stroke="#6c7686" stroke-width="3" stroke-linejoin="round"/>
+<line x1="70" y1="490" x2="319.1" y2="407.0" stroke="#d9622b" stroke-width="7" stroke-linecap="round"/>
+<polygon points="340,400 322.3,416.5 315.9,397.5" fill="#d9622b"/>
+<line x1="340" y1="400" x2="423.0" y2="150.9" stroke="#2f5bd8" stroke-width="5" stroke-linecap="round"/>
+<polygon points="430,130 432.5,154.1 413.5,147.7" fill="#2f5bd8"/>
+<circle cx="70" cy="490" r="7" fill="#18202c"/>
+</svg>
+  <div style="display:flex; flex-direction:column; gap:12px">
+    <p style="font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#2f5bd8">The math · [cat, meows]</p>
+    <h2 style="font-family:'Bricolage Grotesque', Arial, sans-serif; font-size:64px; font-weight:700; line-height:1.1; color:#18202c">The gradient of the dot product</h2>
+  </div>
+  <x-embed style="position:absolute; top:290px; left:128px; width:1080px; height:600px"><!doctype html>
+<html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:transparent}
+body{color:#18202c;font-family:"STIX Two Math","STIX Two Text","Cambria Math","Latin Modern Math","Times New Roman",serif}
+.row{display:flex;align-items:center;height:150px}
+.lab{width:220px;flex:none;font:600 26px -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#5b6676}
+.m{font-size:42px;white-space:nowrap;line-height:1}
+i{font-style:italic}
+sub{font-size:.6em;vertical-align:-.35em;line-height:0;font-style:normal}
+.f{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .12em;font-size:38px}
+.f>span{padding:.06em .15em;line-height:1.1}
+.f>span:first-child{border-bottom:2px solid currentColor}
+.p{display:inline-block;vertical-align:middle;font-size:2.6em;line-height:1;transform:scaleX(.75);margin:0 -.04em}
+.gap{display:inline-block;width:1.4em}
+.a{color:#2f5bd8}
+</style></head><body>
+<div class="row"><div class="lab">Vectors</div><div class="m">cat = (<i>x</i><sub>1</sub>, <i>y</i><sub>1</sub>)<span class="gap"></span>meows = (<i>x</i><sub>2</sub>, <i>y</i><sub>2</sub>)</div></div>
+<div class="row"><div class="lab">Dot product</div><div class="m"><i>s</i> = cat · meows = <i>x</i><sub>1</sub><i>x</i><sub>2</sub> + <i>y</i><sub>1</sub><i>y</i><sub>2</sub></div></div>
+<div class="row"><div class="lab">Partial derivatives</div><div class="m"><span class="f"><span>∂<i>s</i></span><span>∂<i>x</i><sub>1</sub></span></span> = <i>x</i><sub>2</sub>,<span class="gap"></span><span class="f"><span>∂<i>s</i></span><span>∂<i>y</i><sub>1</sub></span></span> = <i>y</i><sub>2</sub></div></div>
+<div class="row"><div class="lab">Gradient</div><div class="m">∇<i>s</i> = <span class="p">(</span><span class="f"><span>∂<i>s</i></span><span>∂<i>x</i><sub>1</sub></span></span>, <span class="f"><span>∂<i>s</i></span><span>∂<i>y</i><sub>1</sub></span></span><span class="p">)</span> = (<i>x</i><sub>2</sub>, <i>y</i><sub>2</sub>) = <span class="a">meows</span></div></div>
+</body></html></x-embed>
+  <p style="position:absolute; top:696px; left:1590px; width:100px; font-family:'Public Sans', Arial, sans-serif; font-size:32px; font-weight:700; line-height:1.2; color:#b84d1c">cat</p>
+  <p style="position:absolute; top:486px; left:1230px; width:150px; font-family:'Public Sans', Arial, sans-serif; font-size:32px; font-style:italic; line-height:1.2; text-align:right; color:#5b6676">meows</p>
+  <p style="position:absolute; top:530px; left:1640px; width:152px; font-family:'Public Sans', Arial, sans-serif; font-size:28px; font-weight:700; line-height:1.2; color:#2f5bd8">gradient</p>
+  <p style="position:absolute; top:312px; left:1316px; width:100px; font-family:'Public Sans', Arial, sans-serif; font-size:24px; color:#5b6676">dim 2</p>
+  <p style="position:absolute; top:792px; left:1680px; width:92px; font-family:'Public Sans', Arial, sans-serif; font-size:24px; text-align:right; color:#5b6676">dim 1</p>
+  <aside>Call cat (x₁, y₁) and meows (x₂, y₂). The score s is their dot product: multiply matching parts and add, x₁x₂ plus y₁y₂. A partial derivative asks: if I nudge only one number, how fast does s change? If x₁ goes up by 1, the x₁x₂ part goes up by x₂ and the y₁y₂ part doesn’t change at all. So the partial derivative of s with respect to x₁ is x₂. The same reasoning gives y₂ for y₁. Stack the two partial derivatives into one vector and you get the gradient: (x₂, y₂), which is exactly the meows vector. The picture shows it: the blue gradient arrow from the tip of cat points the same way meows does. So to make the score bigger, move cat a little in the direction of meows. To make it smaller, as for student and meows, move the other way.</aside>
+</section>

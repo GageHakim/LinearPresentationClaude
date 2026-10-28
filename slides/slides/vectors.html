@@ -1,0 +1,58 @@
+<section id="vectors" style="background:#f3f5f8;color:#18202c;font-family:'Public Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center">
+<svg aria-label="The same plane with dog and cat drawn as arrows from the origin, 17 degrees apart; the other words are greyed out" width="792" height="792" viewBox="0 0 792 792" style="position:absolute;left:1000px;top:150px;width:792px;height:792px">
+<rect x="1" y="1" width="790" height="790" rx="24" fill="#fbfcfe" stroke="#dde2ea" stroke-width="2"/>
+<g stroke="#e6eaf0" stroke-width="2">
+<line x1="96" y1="72" x2="96" y2="720"/><line x1="246" y1="72" x2="246" y2="720"/><line x1="546" y1="72" x2="546" y2="720"/><line x1="696" y1="72" x2="696" y2="720"/>
+<line x1="72" y1="96" x2="720" y2="96"/><line x1="72" y1="246" x2="720" y2="246"/><line x1="72" y1="546" x2="720" y2="546"/><line x1="72" y1="696" x2="720" y2="696"/>
+</g>
+<g stroke="#5b6676" stroke-width="3">
+<line x1="52" y1="396" x2="740" y2="396"/>
+<line x1="396" y1="84" x2="396" y2="708"/>
+</g>
+<g fill="#5b6676">
+<polygon points="36,396 56,386 56,406"/>
+<polygon points="756,396 736,386 736,406"/>
+<polygon points="396,68 386,88 406,88"/>
+<polygon points="396,724 386,704 406,704"/>
+</g>
+<g fill="#c3cad4">
+<circle cx="171" cy="156" r="10"/>
+<circle cx="351" cy="261" r="10"/>
+<circle cx="216" cy="606" r="10"/>
+<circle cx="561" cy="441" r="10"/>
+</g>
+<path d="M396 396 L462.6 456.6 A90 90 0 0 1 441.6 473.6 Z" fill="#2f5bd8" opacity="0.18"/>
+<path d="M462.6 456.6 A90 90 0 0 1 441.6 473.6" fill="none" stroke="#2f5bd8" stroke-width="3"/>
+<line x1="396" y1="396" x2="543.2" y2="529.8" stroke="#11917f" stroke-width="7" stroke-linecap="round"/>
+<polygon points="561,546 535.1,538.7 551.3,520.9" fill="#11917f"/>
+<line x1="396" y1="396" x2="533.8" y2="630.3" stroke="#d9622b" stroke-width="7" stroke-linecap="round"/>
+<polygon points="546,651 523.5,636.4 544.1,624.2" fill="#d9622b"/>
+<circle cx="396" cy="396" r="8" fill="#18202c"/>
+</svg>
+<div style="width:800px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:20px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#2f5bd8">Word embeddings</p>
+<h2 style="font-family:'Bricolage Grotesque', Arial, sans-serif;font-size:64px;font-weight:700;line-height:1.1;color:#18202c">Each word is an arrow from the origin</h2>
+<p style="font-size:32px;line-height:1.4;color:#4a5566">Words with similar meanings point in similar directions. The smaller the angle, the more alike they are.</p>
+</div>
+<table style="width:800px;font-size:28px;color:#18202c">
+<tr><th style="width:40%;text-align:left">Pair</th><th style="width:25%;text-align:right">Angle</th><th style="width:35%;text-align:right">Cosine similarity</th></tr>
+<tr><td>cat · dog</td><td style="text-align:right">17°</td><td style="text-align:right">+0.95</td></tr>
+<tr><td>dog · talks</td><td style="text-align:right">176°</td><td style="text-align:right">−1.00</td></tr>
+</table>
+<p style="font-size:24px;line-height:1.4;color:#5b6676">Cosine similarity is the cosine of the angle: +1 means the same direction, −1 means opposite.</p>
+</div>
+<p id="ax-human" style="position:absolute;left:1276px;top:164px;width:240px;font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:center;color:#5b6676">Human</p>
+<p id="ax-animal" style="position:absolute;left:1276px;top:884px;width:240px;font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:center;color:#5b6676">Animal</p>
+<p id="ax-verb" style="position:absolute;left:1028px;top:494px;width:200px;font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#5b6676">Verb</p>
+<p id="ax-noun" style="position:absolute;left:1564px;top:494px;width:200px;font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:right;color:#5b6676">Noun</p>
+<p id="w-talks" style="position:absolute;left:1193px;top:276px;width:220px;font-size:36px;font-weight:700;line-height:1.2;color:#8a93a1">talks</p>
+<p id="w-learning" style="position:absolute;left:1373px;top:381px;width:220px;font-size:36px;font-weight:700;line-height:1.2;color:#8a93a1">learning</p>
+<p id="w-bark" style="position:absolute;left:1238px;top:726px;width:220px;font-size:36px;font-weight:700;line-height:1.2;color:#8a93a1">bark</p>
+<p id="w-toy" style="position:absolute;left:1583px;top:561px;width:209px;font-size:36px;font-weight:700;line-height:1.2;color:#8a93a1">toy</p>
+<p id="w-dog" style="position:absolute;left:1583px;top:666px;width:209px;font-size:36px;font-weight:700;line-height:1.2;color:#0c7466">dog</p>
+<p id="c-dog" style="position:absolute;left:1583px;top:710px;width:209px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap;color:#0c7466">[+0.55, −0.50]</p>
+<p id="w-cat" style="position:absolute;left:1568px;top:771px;width:209px;font-size:36px;font-weight:700;line-height:1.2;color:#b84d1c">cat</p>
+<p id="c-cat" style="position:absolute;left:1568px;top:815px;width:209px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap;color:#b84d1c">[+0.50, −0.85]</p>
+<aside>Now draw each word as an arrow from the origin to its point. Dog and cat point almost the same way: only 17 degrees apart, so their cosine similarity is about 0.95. Compare dog with talks: they point in opposite directions, so the similarity is about −1. This is how a model measures how alike two words are. It doesn’t look at the letters at all, only at the direction of the vectors. In the training demo, watch the cat and dog arrows swing toward each other.</aside>
+</section>

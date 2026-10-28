@@ -1,0 +1,58 @@
+<section id="step" style="background:#f3f5f8;color:#18202c;font-family:'Public Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:32px">
+<svg aria-label="cat with the full gradient drawn faintly from its tip, a short arrow for learning rate times gradient, and the new cat vector ending at that short arrow" width="560" height="560" viewBox="0 0 560 560" style="position:absolute;left:1232px;top:320px;width:560px;height:560px">
+<rect x="1" y="1" width="558" height="558" rx="24" fill="#fbfcfe" stroke="#dde2ea" stroke-width="2"/>
+<g stroke="#e6eaf0" stroke-width="2">
+<line x1="160" y1="40" x2="160" y2="490"/><line x1="250" y1="40" x2="250" y2="490"/><line x1="340" y1="40" x2="340" y2="490"/><line x1="430" y1="40" x2="430" y2="490"/>
+<line x1="70" y1="400" x2="530" y2="400"/><line x1="70" y1="310" x2="530" y2="310"/><line x1="70" y1="220" x2="530" y2="220"/><line x1="70" y1="130" x2="530" y2="130"/>
+</g>
+<g stroke="#5b6676" stroke-width="3">
+<line x1="70" y1="490" x2="530" y2="490"/>
+<line x1="70" y1="490" x2="70" y2="40"/>
+</g>
+<line x1="70" y1="490" x2="153.0" y2="240.9" stroke="#6c7686" stroke-width="5" stroke-dasharray="12 9"/>
+<polygon points="160,220 162.5,244.1 143.5,237.7" fill="#fbfcfe" stroke="#6c7686" stroke-width="3" stroke-linejoin="round"/>
+<g opacity="0.35">
+<line x1="340" y1="400" x2="423.0" y2="150.9" stroke="#2f5bd8" stroke-width="4" stroke-dasharray="10 8"/>
+<polygon points="430,130 432.5,154.1 413.5,147.7" fill="#2f5bd8"/>
+</g>
+<g opacity="0.4">
+<line x1="70" y1="490" x2="319.1" y2="407.0" stroke="#d9622b" stroke-width="7" stroke-linecap="round"/>
+<polygon points="340,400 322.3,416.5 315.9,397.5" fill="#d9622b"/>
+</g>
+<line x1="70" y1="490" x2="351.1" y2="321.3" stroke="#d9622b" stroke-width="7" stroke-linecap="round"/>
+<polygon points="370,310 356.2,329.9 346.0,312.7" fill="#d9622b"/>
+<line x1="340" y1="400" x2="363.0" y2="330.9" stroke="#2f5bd8" stroke-width="5" stroke-linecap="round"/>
+<polygon points="370,310 372.5,334.1 353.5,327.7" fill="#2f5bd8"/>
+<circle cx="70" cy="490" r="7" fill="#18202c"/>
+</svg>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#2f5bd8">The math · [cat, meows]</p>
+<h2 style="font-family:'Bricolage Grotesque', Arial, sans-serif;font-size:64px;font-weight:700;line-height:1.1;color:#18202c">Learning rate × gradient</h2>
+<p style="font-size:28px;line-height:1.4;color:#4a5566">η (eta) is the learning rate: a small number, like 0.1, that sets how big each step is.</p>
+</div>
+<x-embed style="position:absolute;left:128px;top:320px;width:1080px;height:560px"><!doctype html>
+<html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:transparent}
+body{color:#18202c;font-family:"STIX Two Math","STIX Two Text","Cambria Math","Latin Modern Math","Times New Roman",serif}
+.row{display:flex;align-items:center;height:140px}
+.lab{width:220px;flex:none;font:600 26px -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#5b6676;line-height:1.3}
+.m{font-size:42px;white-space:nowrap;line-height:1}
+i{font-style:italic}
+sub{font-size:.6em;vertical-align:-.35em;line-height:0;font-style:normal}
+.a{color:#2f5bd8}
+.c{color:#b84d1c}
+</style></head><body>
+<div class="row"><div class="lab">Gradient</div><div class="m">∇<i>s</i> = meows = (<i>x</i><sub>2</sub>, <i>y</i><sub>2</sub>)</div></div>
+<div class="row"><div class="lab">Step</div><div class="m"><span class="a"><i>η</i>∇<i>s</i></span> = <i>η</i>(<i>x</i><sub>2</sub>, <i>y</i><sub>2</sub>) = (<i>ηx</i><sub>2</sub>, <i>ηy</i><sub>2</sub>)</div></div>
+<div class="row"><div class="lab">Update<br>(pull together)</div><div class="m"><span class="c">cat<sub>new</sub></span> = cat + <span class="a"><i>η</i>∇<i>s</i></span> = (<i>x</i><sub>1</sub> + <i>ηx</i><sub>2</sub>, <i>y</i><sub>1</sub> + <i>ηy</i><sub>2</sub>)</div></div>
+<div class="row"><div class="lab">Update<br>(push apart)</div><div class="m">student<sub>new</sub> = student − <i>η</i>∇<i>s</i></div></div>
+</body></html></x-embed>
+<p style="position:absolute;left:1590px;top:726px;width:100px;font-size:32px;font-weight:700;line-height:1.2;color:#c98a6c">cat</p>
+<p style="position:absolute;left:1390px;top:584px;width:200px;font-size:32px;font-weight:700;line-height:1.2;text-align:right;color:#b84d1c">new cat</p>
+<p style="position:absolute;left:1230px;top:516px;width:150px;font-size:32px;font-style:italic;line-height:1.2;text-align:right;color:#5b6676">meows</p>
+<p style="position:absolute;left:1614px;top:640px;width:120px;font-size:28px;font-weight:700;line-height:1.2;color:#2f5bd8">η∇s</p>
+<p style="position:absolute;left:1672px;top:430px;width:110px;font-size:28px;line-height:1.2;color:#7d93d6">∇s</p>
+<p style="position:absolute;left:1316px;top:342px;width:100px;font-size:24px;color:#5b6676">dim 2</p>
+<p style="position:absolute;left:1680px;top:822px;width:92px;font-size:24px;text-align:right;color:#5b6676">dim 1</p>
+<aside>The gradient tells us which direction to move: for cat, it’s the direction of meows. But it doesn’t tell us how far. If we added the whole gradient, cat would jump much too far and could overshoot. So we multiply the gradient by the learning rate η, a small number like 0.1. That shrinks the arrow to a small step, η∇s. The faint blue arrow is the full gradient and the solid blue arrow is the small step. To update, we add that step to cat: x₁ becomes x₁ + ηx₂ and y₁ becomes y₁ + ηy₂. The new cat points a bit more toward meows, so their dot product goes up. For a pair we want to push apart, like student and meows, we subtract the step instead. Training repeats this tiny step thousands of times, and that’s the slow movement you see in the demo.</aside>
+</section>

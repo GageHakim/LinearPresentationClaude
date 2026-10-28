@@ -1,0 +1,61 @@
+<section id="axes" data-transition="magic" style="background:#f3f5f8;color:#18202c;font-family:'Public Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center">
+<svg aria-label="A two-axis plane: verb to noun left to right, animal to human bottom to top, with six word points" width="792" height="792" viewBox="0 0 792 792" style="position:absolute;left:1000px;top:150px;width:792px;height:792px">
+<rect x="1" y="1" width="790" height="790" rx="24" fill="#fbfcfe" stroke="#dde2ea" stroke-width="2"/>
+<g stroke="#e6eaf0" stroke-width="2">
+<line x1="96" y1="72" x2="96" y2="720"/><line x1="246" y1="72" x2="246" y2="720"/><line x1="546" y1="72" x2="546" y2="720"/><line x1="696" y1="72" x2="696" y2="720"/>
+<line x1="72" y1="96" x2="720" y2="96"/><line x1="72" y1="246" x2="720" y2="246"/><line x1="72" y1="546" x2="720" y2="546"/><line x1="72" y1="696" x2="720" y2="696"/>
+</g>
+<g stroke="#5b6676" stroke-width="3">
+<line x1="52" y1="396" x2="740" y2="396"/>
+<line x1="396" y1="84" x2="396" y2="708"/>
+</g>
+<g fill="#5b6676">
+<polygon points="36,396 56,386 56,406"/>
+<polygon points="756,396 736,386 736,406"/>
+<polygon points="396,68 386,88 406,88"/>
+<polygon points="396,724 386,704 406,704"/>
+</g>
+<g fill="#2f5bd8">
+<circle cx="171" cy="156" r="22" opacity="0.15"/><circle cx="171" cy="156" r="11"/>
+<circle cx="351" cy="261" r="22" opacity="0.15"/><circle cx="351" cy="261" r="11"/>
+<circle cx="216" cy="606" r="22" opacity="0.15"/><circle cx="216" cy="606" r="11"/>
+<circle cx="561" cy="441" r="22" opacity="0.15"/><circle cx="561" cy="441" r="11"/>
+<circle cx="561" cy="546" r="22" opacity="0.15"/><circle cx="561" cy="546" r="11"/>
+<circle cx="546" cy="651" r="22" opacity="0.15"/><circle cx="546" cy="651" r="11"/>
+</g>
+</svg>
+<div style="width:800px;display:flex;flex-direction:column;gap:32px">
+<div style="display:flex;flex-direction:column;gap:20px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#2f5bd8">Word embeddings</p>
+<h2 style="font-family:'Bricolage Grotesque', Arial, sans-serif;font-size:64px;font-weight:700;line-height:1.1;color:#18202c">Each dimension can stand for a meaning</h2>
+<p style="font-size:32px;line-height:1.4;color:#4a5566">Give every word a coordinate. Words used in similar ways land near each other.</p>
+</div>
+<table style="width:800px;font-size:26px;color:#18202c">
+<tr><th style="width:32%;text-align:left">Word</th><th style="width:34%;text-align:right">dim 1: noun-ness</th><th style="width:34%;text-align:right">dim 2: human-ness</th></tr>
+<tr><td>talks</td><td style="text-align:right">−0.75</td><td style="text-align:right">+0.80</td></tr>
+<tr><td>learning</td><td style="text-align:right">−0.15</td><td style="text-align:right">+0.45</td></tr>
+<tr><td>bark</td><td style="text-align:right">−0.60</td><td style="text-align:right">−0.70</td></tr>
+<tr><td>toy</td><td style="text-align:right">+0.55</td><td style="text-align:right">−0.15</td></tr>
+<tr><td>dog</td><td style="text-align:right">+0.55</td><td style="text-align:right">−0.50</td></tr>
+<tr><td>cat</td><td style="text-align:right">+0.50</td><td style="text-align:right">−0.85</td></tr>
+</table>
+<p style="font-size:24px;line-height:1.4;color:#5b6676">Placed by hand. Learned dimensions don’t come with names.</p>
+</div>
+<p id="ax-human" style="position:absolute;left:1276px;top:164px;width:240px;font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:center;color:#5b6676">Human</p>
+<p id="ax-animal" style="position:absolute;left:1276px;top:884px;width:240px;font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:center;color:#5b6676">Animal</p>
+<p id="ax-verb" style="position:absolute;left:1028px;top:494px;width:200px;font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#5b6676">Verb</p>
+<p id="ax-noun" style="position:absolute;left:1564px;top:494px;width:200px;font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:right;color:#5b6676">Noun</p>
+<p id="w-talks" style="position:absolute;left:1193px;top:276px;width:220px;font-size:36px;font-weight:700;line-height:1.2;color:#18202c">talks</p>
+<p style="position:absolute;left:1193px;top:320px;width:240px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap;color:#2f5bd8">[−0.75, +0.80]</p>
+<p id="w-learning" style="position:absolute;left:1373px;top:381px;width:220px;font-size:36px;font-weight:700;line-height:1.2;color:#18202c">learning</p>
+<p style="position:absolute;left:1373px;top:425px;width:240px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap;color:#2f5bd8">[−0.15, +0.45]</p>
+<p id="w-bark" style="position:absolute;left:1238px;top:726px;width:220px;font-size:36px;font-weight:700;line-height:1.2;color:#18202c">bark</p>
+<p style="position:absolute;left:1238px;top:770px;width:240px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap;color:#2f5bd8">[−0.60, −0.70]</p>
+<p id="w-toy" style="position:absolute;left:1583px;top:561px;width:209px;font-size:36px;font-weight:700;line-height:1.2;color:#18202c">toy</p>
+<p style="position:absolute;left:1583px;top:605px;width:209px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap;color:#2f5bd8">[+0.55, −0.15]</p>
+<p id="w-dog" style="position:absolute;left:1583px;top:666px;width:209px;font-size:36px;font-weight:700;line-height:1.2;color:#18202c">dog</p>
+<p id="c-dog" style="position:absolute;left:1583px;top:710px;width:209px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap;color:#2f5bd8">[+0.55, −0.50]</p>
+<p id="w-cat" style="position:absolute;left:1568px;top:771px;width:209px;font-size:36px;font-weight:700;line-height:1.2;color:#18202c">cat</p>
+<p id="c-cat" style="position:absolute;left:1568px;top:815px;width:209px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap;color:#2f5bd8">[+0.50, −0.85]</p>
+<aside>Each word becomes a list of numbers, one per dimension. Here we pretend dimension 1 measures how noun-like a word is and dimension 2 how human-related it is. “talks” is a verb that humans do, so it sits top left. “bark” is a verb dogs do, so it sits bottom left. “toy” is a noun used by both kids and pets, so it sits right and near the middle vertically. “learning” can be a verb or a noun, so it sits close to the middle on that axis. “dog” and “cat” are both animal nouns, so they land close together in the bottom right, near each other and far from “talks”. In a real model the dimensions are learned, not named, and there are hundreds of them. That is what the training demo shows next.</aside>
+</section>

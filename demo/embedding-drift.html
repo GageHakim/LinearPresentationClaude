@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Embedding Drift</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one working bench — the vector plane on the left, its live numbers in a side column on the right. */
+:root {
+  --bg: #f3f5f8;
+  --panel: #ffffff;
+  --ink: #18202c;
+  --muted: #5b6676;
+  --line: #dde2ea;
+  --grid: #e8ecf2;
+  --accent: #2f5bd8;
+  --ctx: #6c7686;
+  --c0: #2f5bd8; --c1: #d9622b; --c2: #11917f; --c3: #a142c4; --c4: #b8860b; --c5: #d03c6b;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "Public Sans", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10141b; --panel: #171c25; --ink: #e7ebf2; --muted: #98a2b3; --line: #2a3140; --grid: #1f2530;
+    --accent: #7b9cff; --ctx: #9aa3b2;
+    --c0: #7b9cff; --c1: #ff9a62; --c2: #3fd0b8; --c3: #d18bf0; --c4: #e8c15a; --c5: #ff7aa2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10141b; --panel: #171c25; --ink: #e7ebf2; --muted: #98a2b3; --line: #2a3140; --grid: #1f2530;
+  --accent: #7b9cff; --ctx: #9aa3b2;
+  --c0: #7b9cff; --c1: #ff9a62; --c2: #3fd0b8; --c3: #d18bf0; --c4: #e8c15a; --c5: #ff7aa2;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1280px; margin: 0 auto; padding-block: 28px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 20px; }
+header { display: grid; gap: 10px; }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4vw, 40px); line-height: 1.05; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+.lede { margin: 0; color: var(--muted); max-width: 70ch; }
+.label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+.pairs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.pair { font-family: var(--mono); font-size: 14px; display: inline-flex; align-items: center; gap: 6px; padding: 4px 6px 4px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+.pair .t { font-weight: 500; }
+.pair .c { color: var(--muted); }
+.pair button { border: 0; background: none; color: var(--muted); cursor: pointer; font-size: 15px; line-height: 1; padding: 2px 4px; border-radius: 4px; }
+.pair button:hover { color: var(--ink); background: var(--grid); }
+.addpair { display: inline-flex; gap: 6px; }
+.addpair input { font-family: var(--mono); font-size: 14px; width: 9ch; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); }
+
+.bench { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px; align-items: start; }
+@media (max-width: 900px) { .bench { grid-template-columns: minmax(0, 1fr); } }
+
+.plane { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 12px; min-width: 0; }
+.plane canvas { width: 100%; aspect-ratio: 1 / 1; max-height: 78vh; display: block; }
+.plane canvas.rot { cursor: grab; touch-action: none; }
+.plane canvas.rot:active { cursor: grabbing; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.btns { display: flex; gap: 8px; }
+button.b { font-family: var(--body); font-weight: 600; font-size: 14px; padding: 8px 14px; border-radius: 7px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+button.b:hover { border-color: var(--muted); }
+button.b.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); min-width: 92px; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ctl { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.ctl select, .ctl input[type=range] { accent-color: var(--accent); }
+.ctl select { font-family: var(--mono); font-size: 13px; padding: 3px 6px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
+.stats { display: flex; gap: 20px; margin-left: auto; font-family: var(--mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stats b { color: var(--ink); font-weight: 500; }
+.hint { font-size: 12px; color: var(--muted); }
+kbd { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; }
+
+.side { display: grid; gap: 16px; min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 10px; min-width: 0; }
+.card h2 { font-family: var(--display); font-weight: 500; font-size: 18px; margin: 0; }
+.card p { margin: 0; font-size: 13px; color: var(--muted); }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { padding: 4px 6px; text-align: right; font-size: 13px; }
+th { font-weight: 600; color: var(--muted); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+td.w, th.w { text-align: left; }
+td.num { font-family: var(--mono); }
+tr.group td { padding-top: 10px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-align: left; }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; vertical-align: -1px; }
+.sw.ctx { background: transparent; border: 2px solid var(--ctx); width: 6px; height: 6px; }
+.word { font-family: var(--mono); font-weight: 500; }
+.word.ctx { font-style: italic; font-weight: 400; color: var(--muted); }
+
+.matrix td.cell { font-family: var(--mono); text-align: center; border-radius: 4px; position: relative; min-width: 46px; }
+.matrix td.cell.pos { outline: 1.5px solid var(--ink); outline-offset: -2px; }
+.matrix th.c { text-align: center; text-transform: none; letter-spacing: 0; font-family: var(--mono); font-style: italic; font-weight: 400; font-size: 12px; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; gap: 6px; align-items: center; }
+.box { width: 12px; height: 12px; border-radius: 3px; outline: 1.5px solid var(--ink); outline-offset: -2px; }
+
+.math { font-family: var(--mono); font-size: 13px; background: var(--bg); border-radius: 6px; padding: 8px 10px; line-height: 1.7; }
+#loss { width: 100%; height: 70px; display: block; }
+.sims { display: grid; gap: 6px; }
+.sim { display: grid; grid-template-columns: 1fr 120px 48px; gap: 8px; align-items: center; font-size: 13px; }
+.sim .bar { height: 6px; background: var(--grid); border-radius: 3px; position: relative; overflow: hidden; }
+.sim .bar i { position: absolute; top: 0; bottom: 0; background: var(--accent); }
+.sim .bar::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--muted); }
+.sim .v { font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Embedding Drift</h1>
+    <p class="lede">Every word starts as a random vector. Each training step nudges a word vector toward the context vectors it appears with in the training set, and away from the ones it never appears with. Watch the arrows settle.</p>
+    <div class="label">Training set</div>
+    <div class="pairs" id="pairs"></div>
+  </header>
+
+  <div class="bench">
+    <section class="plane">
+      <canvas id="plot" aria-label="2-D plot of word and context vectors"></canvas>
+      <div class="controls">
+        <div class="btns">
+          <button class="b primary" id="play">Train</button>
+          <button class="b" id="step">Step</button>
+          <button class="b" id="reset">New random start</button>
+        </div>
+        <label class="ctl" for="dims">Dimensions
+          <select id="dims"><option value="2">2-D</option><option value="3" selected>3-D</option></select>
+        </label>
+        <label class="ctl" for="autorot" id="rotwrap"><input type="checkbox" id="autorot" checked> Auto-rotate</label>
+        <label class="ctl" for="speed">Speed <input type="range" id="speed" min="1" max="40" value="6"></label>
+        <label class="ctl" for="lr">Learning rate
+          <select id="lr"><option>0.02</option><option>0.05</option><option selected>0.1</option><option>0.2</option></select>
+        </label>
+        <label class="ctl" for="showctx"><input type="checkbox" id="showctx" checked> Context vectors</label>
+        <label class="ctl" for="showtrail"><input type="checkbox" id="showtrail" checked> Trails</label>
+        <div class="stats">
+          <span>step <b id="epoch">0</b></span>
+          <span>loss <b id="lossv">–</b></span>
+          <span>seed <b id="seed">–</b></span>
+        </div>
+      </div>
+      <div class="hint"><kbd>Space</kbd> train / pause &nbsp; <kbd>→</kbd> one step &nbsp; <kbd>R</kbd> new random start<span id="hint3d"> &nbsp; Drag the plot to rotate it</span></div>
+    </section>
+
+    <aside class="side">
+      <div class="card">
+        <h2>Vector values</h2>
+        <div class="scroll"><table id="vals"></table></div>
+      </div>
+
+      <div class="card">
+        <h2>Predicted P(context | word)</h2>
+        <div class="math">score = w<sub>word</sub> · c<sub>context</sub><br>P = σ(score) = 1 / (1 + e<sup>−score</sup>)</div>
+        <div class="scroll"><table class="matrix" id="matrix"></table></div>
+        <div class="legend"><span><i class="box"></i> pair is in the training set, target 1</span><span>others, target 0</span></div>
+      </div>
+
+      <div class="card">
+        <h2>Word similarity</h2>
+        <p>Cosine similarity between word vectors. +1 points the same way, −1 opposite.</p>
+        <div class="sims" id="sims"></div>
+      </div>
+
+      <div class="card">
+        <h2>Loss</h2>
+        <canvas id="loss"></canvas>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(() => {
+  const DEFAULT_PAIRS = [["student","studies"],["student","eats"],["cat","eats"],["dog","eats"],["cat","meows"],["dog","barks"],["cat","chases"],["dog","chases"]];
+  const REG = 0.01, TRAIL = 400, INIT_STD = 0.5;
+
+  const $ = id => document.getElementById(id);
+  const plot = $("plot"), pctx = plot.getContext("2d");
+  const lossC = $("loss"), lctx = lossC.getContext("2d");
+
+  let pairs = DEFAULT_PAIRS.map(p => p.slice());
+  let D = 2, words = [], ctxs = [], W = [], C = [], trailsW = [], trailsC = [];
+  let epoch = 0, losses = [], running = false, seed = 0, extent = 2, acc = 0;
+  let yaw = -0.65, pitch = 0.42, dragging = null;
+
+  function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+  function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  const colorOf = i => css("--c" + (i % 6));
+
+  function isPos(w, c) { return pairs.some(p => p[0] === w && p[1] === c); }
+
+  function init(newSeed) {
+    seed = newSeed ?? Math.floor(Math.random() * 9000) + 1000;
+    D = parseInt($("dims").value);
+    const r = mulberry(seed);
+    const g = () => { const u = r() || 1e-9, v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v) * INIT_STD; };
+    const rand = () => Array.from({ length: D }, g);
+    words = [...new Set(pairs.map(p => p[0]))];
+    ctxs = [...new Set(pairs.map(p => p[1]))];
+    W = words.map(rand);
+    C = ctxs.map(rand);
+    trailsW = W.map(v => [v.slice()]);
+    trailsC = C.map(v => [v.slice()]);
+    epoch = 0; losses = [computeLoss()];
+    extent = targetExtent();
+    plot.classList.toggle("rot", D === 3);
+    $("rotwrap").hidden = D !== 3;
+    $("hint3d").hidden = D !== 3;
+    buildTables();
+    render();
+  }
+
+  const sig = x => 1 / (1 + Math.exp(-x));
+  const dot = (a, b) => { let s = 0; for (let k = 0; k < a.length; k++) s += a[k] * b[k]; return s; };
+  const norm = a => Math.sqrt(dot(a, a));
+
+  function computeLoss() {
+    let L = 0;
+    words.forEach((w, i) => ctxs.forEach((c, j) => {
+      const s = Math.min(Math.max(sig(dot(W[i], C[j])), 1e-9), 1 - 1e-9);
+      L += isPos(w, c) ? -Math.log(s) : -Math.log(1 - s);
+    }));
+    return L;
+  }
+
+  // One full-batch gradient step of logistic loss over every (word, context) combination.
+  function step() {
+    const lr = parseFloat($("lr").value);
+    const gW = W.map(() => Array(D).fill(0)), gC = C.map(() => Array(D).fill(0));
+    words.forEach((w, i) => ctxs.forEach((c, j) => {
+      const e = sig(dot(W[i], C[j])) - (isPos(w, c) ? 1 : 0);
+      for (let k = 0; k < D; k++) { gW[i][k] += e * C[j][k]; gC[j][k] += e * W[i][k]; }
+    }));
+    W.forEach((v, i) => { for (let k = 0; k < D; k++) v[k] -= lr * (gW[i][k] + REG * v[k]); });
+    C.forEach((v, j) => { for (let k = 0; k < D; k++) v[k] -= lr * (gC[j][k] + REG * v[k]); });
+    W.forEach((v, i) => { trailsW[i].push(v.slice()); if (trailsW[i].length > TRAIL) trailsW[i].shift(); });
+    C.forEach((v, j) => { trailsC[j].push(v.slice()); if (trailsC[j].length > TRAIL) trailsC[j].shift(); });
+    epoch++;
+    losses.push(computeLoss());
+  }
+
+  function targetExtent() {
+    let m = 0;
+    W.concat($("showctx").checked ? C : []).forEach(v => v.forEach(x => { m = Math.max(m, Math.abs(x)); }));
+    return Math.max(1.5, m * 1.2);
+  }
+
+  // ---------- drawing ----------
+  function sizeCanvas(cv) {
+    const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    const w = Math.round(r.width * d), h = Math.round(r.height * d);
+    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+    return { w: r.width, h: r.height, d };
+  }
+
+  function niceStep(span) {
+    const raw = span / 5, p = Math.pow(10, Math.floor(Math.log10(raw))), n = raw / p;
+    return (n < 1.5 ? 1 : n < 3.5 ? 2 : 5) * p;
+  }
+
+  function arrow(ctx, x0, y0, x1, y1, color, width, dashed) {
+    const a = Math.atan2(y1 - y0, x1 - x0), len = Math.hypot(x1 - x0, y1 - y0), hl = Math.min(12, len * 0.4);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width;
+    ctx.setLineDash(dashed ? [5, 4] : []);
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - Math.cos(a) * hl * 0.6, y1 - Math.sin(a) * hl * 0.6); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(x1, y1);
+    ctx.lineTo(x1 - hl * Math.cos(a - 0.4), y1 - hl * Math.sin(a - 0.4));
+    ctx.lineTo(x1 - hl * Math.cos(a + 0.4), y1 - hl * Math.sin(a + 0.4));
+    ctx.closePath();
+    if (dashed) { ctx.fillStyle = css("--panel"); ctx.fill(); ctx.lineWidth = 1.5; ctx.stroke(); } else ctx.fill();
+  }
+
+  function drawPlot() {
+    const { w, h, d } = sizeCanvas(plot), ctx = pctx;
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+    ctx.fillStyle = css("--panel"); ctx.fillRect(0, 0, w, h);
+    extent += (targetExtent() - extent) * 0.06;
+    const pad = 28, S = Math.min(w, h) / 2 - pad, cx = w / 2, cy = h / 2;
+    const muted = css("--muted"), gridC = css("--grid"), mono = css("--mono");
+
+    // toScreen maps a vector to [screenX, screenY, depth]; depth > 0 is toward the viewer.
+    let toScreen;
+    if (D === 2) {
+      toScreen = v => [cx + v[0] / extent * S, cy - v[1] / extent * S, 0];
+    } else {
+      const cy_ = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch), k = S / (extent * 1.45);
+      toScreen = v => {
+        const x1 = v[0] * cy_ - v[1] * sy, y1 = v[0] * sy + v[1] * cy_;
+        return [cx + x1 * k, cy - (v[2] * cp + y1 * sp) * k, v[2] * sp - y1 * cp];
+      };
+    }
+    const line = (a, b) => { const p = toScreen(a), q = toScreen(b); ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.stroke(); };
+
+    const st = niceStep(extent * 2), E = extent;
+    ctx.font = `11px ${mono}`; ctx.lineWidth = 1;
+    if (D === 2) {
+      const X = v => cx + v / E * S, Y = v => cy - v / E * S;
+      for (let t = -Math.floor(E / st) * st; t <= E + 1e-9; t += st) {
+        const isZero = Math.abs(t) < 1e-9;
+        ctx.strokeStyle = isZero ? muted : gridC;
+        ctx.globalAlpha = isZero ? 0.6 : 1;
+        ctx.beginPath(); ctx.moveTo(X(t), Y(-E)); ctx.lineTo(X(t), Y(E)); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(X(-E), Y(t)); ctx.lineTo(X(E), Y(t)); ctx.stroke();
+        ctx.globalAlpha = 1;
+        if (!isZero) {
+          const lbl = (+t.toFixed(2)).toString();
+          ctx.fillStyle = muted;
+          ctx.textAlign = "center"; ctx.textBaseline = "top"; ctx.fillText(lbl, X(t), cy + 4);
+          ctx.textAlign = "right"; ctx.textBaseline = "middle"; ctx.fillText(lbl, cx - 5, Y(t));
+        }
+      }
+      ctx.fillStyle = muted; ctx.textAlign = "right"; ctx.textBaseline = "bottom";
+      ctx.fillText("dim 1", X(E) - 2, cy - 4);
+      ctx.textAlign = "left"; ctx.textBaseline = "top"; ctx.fillText("dim 2", cx + 6, Y(E) + 2);
+    } else {
+      // Floor grid on the dim1–dim2 plane, then the three axes.
+      ctx.strokeStyle = gridC;
+      for (let t = -Math.floor(E / st) * st; t <= E + 1e-9; t += st) { line([t, -E, 0], [t, E, 0]); line([-E, t, 0], [E, t, 0]); }
+      ctx.strokeStyle = muted; ctx.globalAlpha = 0.6;
+      line([-E, 0, 0], [E, 0, 0]); line([0, -E, 0], [0, E, 0]); line([0, 0, -E], [0, 0, E]);
+      ctx.globalAlpha = 1; ctx.fillStyle = muted; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      [[E * 1.08, 0, 0, "dim 1"], [0, E * 1.08, 0, "dim 2"], [0, 0, E * 1.08, "dim 3"]].forEach(a => { const p = toScreen(a); ctx.fillText(a[3], p[0], p[1]); });
+      const tp = toScreen([st, 0, 0]); ctx.textBaseline = "top"; ctx.fillText((+st.toFixed(2)).toString(), tp[0], tp[1] + 4);
+    }
+
+    const showCtx = $("showctx").checked, showTrail = $("showtrail").checked;
+    const O = toScreen(Array(D).fill(0));
+
+    if (showTrail) {
+      const drawTrail = (tr, color) => {
+        if (tr.length < 2) return;
+        ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+        let prev = toScreen(tr[0]);
+        for (let k = 1; k < tr.length; k++) {
+          const cur = toScreen(tr[k]);
+          ctx.globalAlpha = 0.05 + 0.4 * (k / tr.length);
+          ctx.beginPath(); ctx.moveTo(prev[0], prev[1]); ctx.lineTo(cur[0], cur[1]); ctx.stroke();
+          prev = cur;
+        }
+        const s0 = toScreen(tr[0]);
+        ctx.globalAlpha = 0.5; ctx.fillStyle = color;
+        ctx.beginPath(); ctx.arc(s0[0], s0[1], 2.5, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = 1;
+      };
+      if (showCtx) trailsC.forEach(tr => drawTrail(tr, css("--ctx")));
+      trailsW.forEach((tr, i) => drawTrail(tr, colorOf(i)));
+    }
+
+    const items = [];
+    if (showCtx) C.forEach((v, j) => items.push({ v, text: ctxs[j], color: css("--ctx"), ctx: true }));
+    W.forEach((v, i) => items.push({ v, text: words[i], color: colorOf(i), ctx: false }));
+    items.forEach(it => it.p = toScreen(it.v));
+    if (D === 3) items.sort((a, b) => a.p[2] - b.p[2]);
+
+    const fade = it => D === 3 ? 0.45 + 0.55 * Math.min(1, Math.max(0, (it.p[2] / extent + 1) / 2)) : 1;
+
+    items.forEach(it => {
+      ctx.globalAlpha = fade(it);
+      if (D === 3) {
+        // Drop line from the tip to the floor helps read depth.
+        const f = toScreen([it.v[0], it.v[1], 0]);
+        ctx.strokeStyle = it.color; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
+        ctx.globalAlpha *= 0.6;
+        ctx.beginPath(); ctx.moveTo(it.p[0], it.p[1]); ctx.lineTo(f[0], f[1]); ctx.stroke();
+        ctx.setLineDash([]); ctx.globalAlpha = fade(it);
+      }
+      arrow(ctx, O[0], O[1], it.p[0], it.p[1], it.color, it.ctx ? 1.5 : 2.5, it.ctx);
+    });
+    items.forEach(it => {
+      const a = Math.atan2(-(it.p[1] - O[1]), it.p[0] - O[0]);
+      const lx = it.p[0] + Math.cos(a) * 14, ly = it.p[1] - Math.sin(a) * 14;
+      ctx.globalAlpha = Math.max(0.7, fade(it));
+      ctx.font = `${it.ctx ? "italic 400" : "600"} 14px ${mono}`;
+      ctx.textAlign = Math.cos(a) > 0.3 ? "left" : Math.cos(a) < -0.3 ? "right" : "center";
+      ctx.textBaseline = Math.sin(a) > 0.3 ? "bottom" : Math.sin(a) < -0.3 ? "top" : "middle";
+      ctx.lineWidth = 4; ctx.strokeStyle = css("--panel"); ctx.strokeText(it.text, lx, ly);
+      ctx.fillStyle = it.color; ctx.fillText(it.text, lx, ly);
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  function drawLoss() {
+    const { w, h, d } = sizeCanvas(lossC), ctx = lctx;
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    if (losses.length < 2) { ctx.fillStyle = css("--muted"); ctx.font = `12px ${css("--body")}`; ctx.textBaseline = "middle"; ctx.fillText("Starts drawing once training begins", 0, h / 2); return; }
+    const max = Math.max(...losses), min = 0, n = losses.length;
+    const px = k => (k / (n - 1)) * (w - 4) + 2, py = v => h - 4 - (v - min) / (max - min || 1) * (h - 10);
+    ctx.beginPath(); ctx.moveTo(px(0), h);
+    losses.forEach((v, k) => ctx.lineTo(px(k), py(v)));
+    ctx.lineTo(px(n - 1), h); ctx.closePath();
+    ctx.globalAlpha = 0.15; ctx.fillStyle = css("--accent"); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.beginPath(); losses.forEach((v, k) => k ? ctx.lineTo(px(k), py(v)) : ctx.moveTo(px(k), py(v)));
+    ctx.strokeStyle = css("--accent"); ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = css("--accent"); ctx.beginPath(); ctx.arc(px(n - 1), py(losses[n - 1]), 3, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // ---------- side tables ----------
+  let valCells = [], matCells = [], simRows = [];
+  function buildTables() {
+    const vals = $("vals"), dimsIdx = [...Array(D).keys()], span = D + 1;
+    let html = `<tr><th class="w">Word</th>${dimsIdx.map(k => `<th>dim ${k + 1}</th>`).join("")}</tr><tr class="group"><td colspan="${span}">Word vectors (w)</td></tr>`;
+    words.forEach((w, i) => html += `<tr><td class="w"><span class="sw" style="background:var(--c${i % 6})"></span><span class="word">${w}</span></td>${dimsIdx.map(k => `<td class="num" id="vw${i}_${k}"></td>`).join("")}</tr>`);
+    html += `<tr class="group"><td colspan="${span}">Context vectors (c)</td></tr>`;
+    ctxs.forEach((c, j) => html += `<tr><td class="w"><span class="sw ctx"></span><span class="word ctx">${c}</span></td>${dimsIdx.map(k => `<td class="num" id="vc${j}_${k}"></td>`).join("")}</tr>`);
+    vals.innerHTML = html;
+    valCells = [...words.map((_, i) => [dimsIdx.map(k => $(`vw${i}_${k}`)), () => W[i]]), ...ctxs.map((_, j) => [dimsIdx.map(k => $(`vc${j}_${k}`)), () => C[j]])];
+
+    const m = $("matrix");
+    html = `<tr><th></th>${ctxs.map(c => `<th class="c">${c}</th>`).join("")}</tr>`;
+    words.forEach((w, i) => html += `<tr><td class="w"><span class="word" style="color:var(--c${i % 6})">${w}</span></td>${ctxs.map((c, j) => `<td class="cell${isPos(w, c) ? " pos" : ""}" id="m${i}_${j}"></td>`).join("")}</tr>`);
+    m.innerHTML = html;
+    matCells = words.map((_, i) => ctxs.map((_, j) => $(`m${i}_${j}`)));
+
+    const sims = $("sims"); simRows = []; html = "";
+    for (let a = 0; a < words.length; a++) for (let b = a + 1; b < words.length; b++) {
+      html += `<div class="sim"><span><span class="word" style="color:var(--c${a % 6})">${words[a]}</span> · <span class="word" style="color:var(--c${b % 6})">${words[b]}</span></span><span class="bar"><i id="sb${a}_${b}"></i></span><span class="v" id="sv${a}_${b}"></span></div>`;
+      simRows.push([a, b]);
+    }
+    sims.innerHTML = html || `<p>Add a second word to compare.</p>`;
+  }
+
+  const fmt = v => (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(3);
+
+  function updateTables() {
+    valCells.forEach(([cells, get]) => { const v = get(); cells.forEach((el, k) => el.textContent = fmt(v[k])); });
+    const accent = css("--accent");
+    words.forEach((w, i) => ctxs.forEach((c, j) => {
+      const p = sig(dot(W[i], C[j])), el = matCells[i][j];
+      el.textContent = Math.round(p * 100) + "%";
+      el.style.background = `color-mix(in srgb, ${accent} ${Math.round(p * 70)}%, transparent)`;
+      el.style.color = p > 0.6 ? css("--panel") : css("--ink");
+    }));
+    simRows.forEach(([a, b]) => {
+      const s = dot(W[a], W[b]) / (norm(W[a]) * norm(W[b]) || 1);
+      const bar = $(`sb${a}_${b}`);
+      bar.style.left = (s >= 0 ? 50 : 50 + s * 50) + "%";
+      bar.style.width = Math.abs(s) * 50 + "%";
+      $(`sv${a}_${b}`).textContent = (s >= 0 ? "+" : "−") + Math.abs(s).toFixed(2);
+    });
+    $("epoch").textContent = epoch;
+    $("lossv").textContent = losses[losses.length - 1].toFixed(3);
+    $("seed").textContent = seed;
+  }
+
+  function render() { drawPlot(); drawLoss(); updateTables(); }
+
+  // ---------- pairs editor ----------
+  function renderPairs() {
+    const el = $("pairs");
+    el.innerHTML = pairs.map((p, k) => `<span class="pair">[<span class="t">${p[0]}</span>, <span class="c">${p[1]}</span>]<button aria-label="Remove pair ${p[0]}, ${p[1]}" data-k="${k}">×</button></span>`).join("") +
+      `<form class="addpair" id="addform"><input id="addw" placeholder="word" aria-label="New word" autocomplete="off"><input id="addc" placeholder="context" aria-label="New context" autocomplete="off"><button class="b" type="submit">Add pair</button></form>` +
+      (JSON.stringify(pairs) !== JSON.stringify(DEFAULT_PAIRS) ? `<button class="b" id="restore">Restore original pairs</button>` : "");
+    el.querySelectorAll(".pair button").forEach(b => b.onclick = () => { if (pairs.length > 1) { pairs.splice(+b.dataset.k, 1); renderPairs(); init(seed); } });
+    $("addform").onsubmit = e => {
+      e.preventDefault();
+      const w = $("addw").value.trim().toLowerCase(), c = $("addc").value.trim().toLowerCase();
+      if (!w || !c || isPos(w, c)) return;
+      pairs.push([w, c]); renderPairs(); init(seed);
+    };
+    const r = $("restore"); if (r) r.onclick = () => { pairs = DEFAULT_PAIRS.map(p => p.slice()); renderPairs(); init(seed); };
+  }
+
+  // ---------- loop & controls ----------
+  function setRunning(on) { running = on; $("play").textContent = on ? "Pause" : (epoch ? "Resume" : "Train"); }
+  $("play").onclick = () => setRunning(!running);
+  $("step").onclick = () => { setRunning(false); step(); render(); };
+  $("reset").onclick = () => { setRunning(false); init(); };
+  $("dims").onchange = () => { setRunning(false); init(seed); };
+  $("showctx").onchange = render; $("showtrail").onchange = render;
+  document.addEventListener("keydown", e => {
+    if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
+    if (e.code === "Space") { e.preventDefault(); setRunning(!running); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); $("step").click(); }
+    else if (e.key === "r" || e.key === "R") $("reset").click();
+  });
+
+  plot.addEventListener("pointerdown", e => { if (D !== 3) return; dragging = { x: e.clientX, y: e.clientY }; plot.setPointerCapture(e.pointerId); });
+  plot.addEventListener("pointermove", e => {
+    if (!dragging) return;
+    yaw -= (e.clientX - dragging.x) * 0.01;
+    pitch = Math.max(-1.45, Math.min(1.45, pitch + (e.clientY - dragging.y) * 0.01));
+    dragging = { x: e.clientX, y: e.clientY };
+  });
+  const endDrag = () => { dragging = null; };
+  plot.addEventListener("pointerup", endDrag); plot.addEventListener("pointercancel", endDrag);
+
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion) $("autorot").checked = false;
+
+  function frame() {
+    if (D === 3 && $("autorot").checked && !dragging) yaw += 0.004;
+    if (running) {
+      acc += parseInt($("speed").value) / 6;
+      while (acc >= 1) { step(); acc -= 1; }
+      render();
+    } else drawPlot();
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener("resize", render);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
+  new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  renderPairs();
+  init(1);
+  requestAnimationFrame(frame);
+})();
+</script>
